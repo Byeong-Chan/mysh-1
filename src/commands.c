@@ -63,7 +63,6 @@ int evaluate_command(int n_commands, struct single_command (*commands)[512])
           execv(com->argv[0], com->argv);
         }
         else {
-          printf("waiting\n");
           wait(&status);
         }
       }
