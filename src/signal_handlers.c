@@ -1,20 +1,23 @@
 #include "signal_handlers.h"
 #include <signal.h>
+#include <stdio.h>
 
 void catch_sigint(int signalNo)
 {
   // TODO: File this!
   if(signalNo == SIGINT) {
-    printf("SIGINT\n");
+    signal(SIGINT, SIG_IGN);
     return;
   }
+  fprintf(stderr, "Signal Error!\n");
 }
 
 void catch_sigtstp(int signalNo)
 {
   // TODO: File this!
   if(signalNo == SIGTSTP) {
-    printf("SIGTSTP\n");
+    signal(SIGTSTP, SIG_IGN);
     return;
   }
+  fprintf(stderr, "Signal Error!\n");
 }
