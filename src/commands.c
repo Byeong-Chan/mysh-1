@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <unistd.h>
+#include <stddef.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 #include "commands.h"
 #include "built_in.h"
@@ -50,7 +54,21 @@ int evaluate_command(int n_commands, struct single_command (*commands)[512])
     } else if (strcmp(com->argv[0], "exit") == 0) {
       return 1;
     } else {
-      fprintf(stderr, "%s: command not found\n", com->argv[0]);
+      int possible = access(com->argv[0], 0);
+      if(possible == 0) {
+        int status;
+        pid_t pid = fork();
+        if(pid == 0) {
+          printf("Excution : %s\n",com->argv[0]);
+          execv(com->argv[0], com->argv);
+        }
+        else {
+          printf("waiting\n");
+          wait(&status);
+        }
+      }
+      else
+        fprintf(stderr, "%s: command not found\n", com->argv[0]);
       return -1;
     }
   }
