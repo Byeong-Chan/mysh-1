@@ -2,11 +2,13 @@
 #include <string.h>
 
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <linux/limits.h>
 
 #include "built_in.h"
+#include "commands.h"
 
 int do_cd(int argc, char** argv) {
   if (!validate_cd_argv(argc, argv))
@@ -37,7 +39,22 @@ int do_fg(int argc, char** argv) {
     return -1;
 
   // TODO: Fill this.
-
+  if(bg_pid == 0) {
+    fprintf(stderr, "Any process is not exist.\n");
+    return 0;
+  }
+  
+  int status;
+  int p = waitpid(bg_pid, &status, WNOHANG);
+  if(p == 0) {
+    printf("running : %d\n", bg_pid);
+    for(int i = 0; i < bg_argc; i++) printf("%s ",bg_argv[i]);
+    printf("\n");
+  }
+  wait(&status);
+  printf("done : %d\n", bg_pid);
+  for(int i = 0; i < bg_argc; i++) printf("%s ",bg_argv[i]);
+  printf("\n");
   return 0;
 }
 
