@@ -113,6 +113,7 @@ void free_commands(int n_commands, struct single_command (*commands)[512])
     char** argv = com->argv;
 
     for (int j = 0; j < argc; ++j) {
+      if(argv[j] == NULL) continue;
       free(argv[j]);
     }
 
